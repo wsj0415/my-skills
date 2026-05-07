@@ -1,0 +1,7 @@
+{
+  "name": "content-evaluator",
+  "description": "内容质量评估与爆款潜力分析技能，对文本内容进行六维度评分并生成结构化报告",
+  "version": "1.0.0",
+  "author": "AI Assistant",
+  "created": "2026-05-07"
+}

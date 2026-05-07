@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>内容评估报告</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f5f6fa; color: #1a1a2e; padding: 24px; line-height: 1.7; }
+  
+  .container { max-width: 800px; margin: 0 auto; }
+  
+  /* Header */
+  .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 16px; padding: 32px; margin-bottom: 24px; text-align: center; }
+  .header h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+  .header .subtitle { opacity: 0.9; font-size: 14px; margin-bottom: 24px; }
+  
+  .score-display { display: flex; align-items: center; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  .big-score { font-size: 72px; font-weight: 700; line-height: 1; }
+  .score-meta { text-align: left; }
+  .score-label { font-size: 14px; opacity: 0.9; }
+  .score-grade { display: inline-block; background: rgba(255,255,255,0.25); padding: 8px 20px; border-radius: 24px; font-size: 16px; font-weight: 600; margin-top: 12px; }
+  
+  /* Card */
+  .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .card-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .card-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  
+  /* Dimensions */
+  .dimension-item { margin-bottom: 24px; }
+  .dimension-item:last-child { margin-bottom: 0; }
+  .dimension-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .dimension-name { font-size: 14px; font-weight: 500; color: #333; }
+  .dimension-score { font-size: 16px; font-weight: 700; }
+  .dimension-bar { height: 10px; background: #e9ecef; border-radius: 5px; overflow: hidden; margin-bottom: 8px; }
+  .dimension-fill { height: 100%; border-radius: 5px; transition: width 0.8s ease; }
+  .dimension-comment { font-size: 13px; color: #666; line-height: 1.6; }
+  
+  /* Score colors */
+  .score-high { color: #28a745; }
+  .score-medium { color: #ffc107; }
+  .score-low { color: #dc3545; }
+  .fill-high { background: linear-gradient(90deg, #28a745, #20c997); }
+  .fill-medium { background: linear-gradient(90deg, #ffc107, #fd7e14); }
+  .fill-low { background: linear-gradient(90deg, #dc3545, #ff6b6b); }
+  
+  /* Verdict Grid */
+  .verdict-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .verdict-item { background: #f8f9fa; border-radius: 10px; padding: 16px 12px; text-align: center; }
+  .verdict-value { font-size: 24px; font-weight: 700; color: #667eea; }
+  .verdict-label { font-size: 12px; color: #6c757d; margin-top: 4px; }
+  
+  /* Lists */
+  .suggestions-list, .strengths-list, .weaknesses-list { list-style: none; }
+  .suggestions-list li, .strengths-list li, .weaknesses-list li { padding: 12px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; display: flex; align-items: flex-start; gap: 12px; }
+  .suggestions-list li:last-child, .strengths-list li:last-child, .weaknesses-list li:last-child { border-bottom: none; }
+  .bullet { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+  .bullet.suggestion { background: #e7f3ff; color: #007bff; }
+  .bullet.positive { background: #d4edda; color: #155724; }
+  .bullet.negative { background: #f8d7da; color: #721c24; }
+  
+  /* Prediction */
+  .prediction-box { background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border-radius: 12px; padding: 24px; }
+  .prediction-title { font-weight: 600; font-size: 16px; color: #667eea; margin-bottom: 16px; }
+  .prediction-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #e0e0e0; font-size: 14px; }
+  .prediction-item:last-child { border-bottom: none; }
+  .prediction-value { font-weight: 600; color: #333; }
+  
+  /* Footer */
+  .footer { text-align: center; padding: 24px; color: #999; font-size: 12px; }
+  
+  /* Print */
+  @media print {
+    body { background: white; padding: 0; }
+    .card { box-shadow: none; border: 1px solid #eee; margin-bottom: 16px; page-break-inside: avoid; }
+    .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .dimension-fill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  
+  @media (max-width: 600px) {
+    .verdict-grid { grid-template-columns: repeat(2, 1fr); }
+    .score-display { flex-direction: column; text-align: center; }
+    .score-meta { text-align: center; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>📊 内容评估报告</h1>
+    <div class="subtitle">内容评估 - 2026-05-07 20:19</div>
+    <div class="score-display">
+      <div class="big-score">74</div>
+      <div class="score-meta">
+        <div class="score-label">综合爆款潜力指数（满分100）</div>
+        <div class="score-grade">A级 - 有爆款潜力</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Six Dimensions -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-icon" style="background: #e7f3ff; color: #007bff;">📐</span>
+      六维评分分析
+    </div>
+    
+    <!-- Hook -->
+    <div class="dimension-item">
+      <div class="dimension-header">
+        <span class="dimension-name">1️⃣ Hook 钩子强度</span>
+        <span class="dimension-score score-high">82/100</span>
+      </div>
+      <div class="dimension-bar">
+        <div class="dimension-fill fill-high" style="width: 82%;"></div>
+      </div>
+      <div class="dimension-comment">标题直接命中'爆款'这个自媒体核心痛点，能引发创作者的强烈好奇心。问题设置清晰，预期收益明确。建议在标题中加入具体数据（如'单月涨粉10万+'）或时间维度，可进一步提升点击欲望。</div>
+    </div>
+    
+    <!-- Velocity -->
+    <div class="dimension-item">
+      <div class="dimension-header">
+        <span class="dimension-name">2️⃣ 互动速度 Velocity</span>
+        <span class="dimension-score score-medium">68/100</span>
+      </div>
+      <div class="dimension-bar">
+        <div class="dimension-fill fill-medium" style="width: 68%;"></div>
+      </div>
+      <div class="dimension-comment">方法论实用性强，但缺乏具体案例和数据支撑。'参考+模仿'的公式可操作，但需要配合真实案例才能引发深度讨论。考虑加入读者互动环节或设置讨论话题，提升评论量。</div>
+    </div>
+    
+    <!-- Novelty -->
+    <div class="dimension-item">
+      <div class="dimension-header">
+        <span class="dimension-name">3️⃣ 话题新颖度</span>
+        <span class="dimension-score score-high">70/100</span>
+      </div>
+      <div class="dimension-bar">
+        <div class="dimension-fill fill-high" style="width: 70%;"></div>
+      </div>
+      <div class="dimension-comment">选题'自媒体爆款'是持续热门话题，刚需明确。但此角度已被大量创作者写过，差异化不够突出。建议选择一个更细分的切入点，如'小红书爆款'或'短视频爆款'。</div>
+    </div>
+    
+    <!-- Audience -->
+    <div class="dimension-item">
+      <div class="dimension-header">
+        <span class="dimension-name">4️⃣ 受众匹配度</span>
+        <span class="dimension-score score-high">78/100</span>
+      </div>
+      <div class="dimension-bar">
+        <div class="dimension-fill fill-high" style="width: 78%;"></div>
+      </div>
+      <div class="dimension-comment">精准命中想学习爆款技巧的自媒体新人群体，痛点识别准确。不同平台策略的区分（公众号vs开放平台）显示出对受众需求的深入理解。建议进一步细化受众画像。</div>
+    </div>
+    
+    <!-- Value -->
+    <div class="dimension-item">
+      <div class="dimension-header">
+        <span class="dimension-name">5️⃣ 实用价值</span>
+        <span class="dimension-score score-high">75/100</span>
+      </div>
+      <div class="dimension-bar">
+        <div class="dimension-fill fill-high" style="width: 75%;"></div>
+      </div>
+      <div class="dimension-comment">提供可操作的'参考+模仿'方法论，实用价值明显。字数建议（1300-2000字）符合平台推荐偏好。但内容深度一般，建议补充2-3个真实爆款案例及数据对比。</div>
+    </div>
+    
+    <!-- Share -->
+    <div class="dimension-item">
+      <div class="dimension-header">
+        <span class="dimension-name">6️⃣ 传播诱因</span>
+        <span class="dimension-score score-medium">62/100</span>
+      </div>
+      <div class="dimension-bar">
+        <div class="dimension-fill fill-medium" style="width: 62%;"></div>
+      </div>
+      <div class="dimension-comment">主要分享动机是'学习技巧'，存在但不够强烈。缺乏强情感共鸣点或争议性话题。建议加入'踩坑警告'或'常见误区'等具有话题性的内容，激发转发讨论。</div>
+    </div>
+  </div>
+
+  <!-- Verdict -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-icon" style="background: #fff3cd; color: #856404;">🎯</span>
+      爆款判定指标
+    </div>
+    <div class="verdict-grid">
+      <div class="verdict-item">
+        <div class="verdict-value">82%</div>
+        <div class="verdict-label">Hook分</div>
+      </div>
+      <div class="verdict-item">
+        <div class="verdict-value">5-8%</div>
+        <div class="verdict-label">预测互动率</div>
+      </div>
+      <div class="verdict-item">
+        <div class="verdict-value">30-50%</div>
+        <div class="verdict-label">Top 1% 概率</div>
+      </div>
+      <div class="verdict-item">
+        <div class="verdict-value">65-75%</div>
+        <div class="verdict-label">阅读完成率</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suggestions -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-icon" style="background: #e7f3ff; color: #007bff;">💡</span>
+      改进建议
+    </div>
+    <ul class="suggestions-list">
+      <li><span class="bullet suggestion">1</span><span>标题加数据：加入具体数字或成果承诺，如'我用这个方法单月涨粉10万+'</span></li>
+<li><span class="bullet suggestion">2</span><span>补充案例：加入2-3个真实爆款案例截图和数据对比，增强可信度</span></li>
+<li><span class="bullet suggestion">3</span><span>增加争议点：加入'90%自媒体人都踩过的3个坑'等具有话题性的内容</span></li>
+<li><span class="bullet suggestion">4</span><span>设置互动：文末设置讨论话题或投票，引导读者评论互动</span></li>
+<li><span class="bullet suggestion">5</span><span>优化结尾：将说教式结尾改为行动号召（CTA），提升转化</span></li>
+
+    </ul>
+  </div>
+
+  <!-- Prediction -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-icon" style="background: #d4edda; color: #155724;">📈</span>
+      爆款预测
+    </div>
+    <div class="prediction-box">
+      <div class="prediction-item">
+        <span>爆款等级</span>
+        <span class="prediction-value">A级 - 有爆款潜力</span>
+      </div>
+      <div class="prediction-item">
+        <span>综合评分</span>
+        <span class="prediction-value">74/100</span>
+      </div>
+      <div class="prediction-item">
+        <span>达到 Top 1% 爆款概率</span>
+        <span class="prediction-value">30-50%</span>
+      </div>
+      <div class="prediction-item">
+        <span>优化后预计可提升至</span>
+        <span class="prediction-value">89+</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    基于 AI 内容爆款潜力分析框架 | 评分时间：2026-05-07 20:19
+  </div>
+</div>
+</body>
+</html>

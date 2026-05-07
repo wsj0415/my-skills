@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>内容评估报告</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f5f6fa; color: #1a1a2e; padding: 24px; line-height: 1.7; }
+  
+  .container { max-width: 800px; margin: 0 auto; }
+  
+  /* Header */
+  .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 16px; padding: 32px; margin-bottom: 24px; text-align: center; }
+  .header h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+  .header .subtitle { opacity: 0.9; font-size: 14px; margin-bottom: 24px; }
+  
+  .score-display { display: flex; align-items: center; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  .big-score { font-size: 72px; font-weight: 700; line-height: 1; }
+  .score-meta { text-align: left; }
+  .score-label { font-size: 14px; opacity: 0.9; }
+  .score-grade { display: inline-block; background: rgba(255,255,255,0.25); padding: 8px 20px; border-radius: 24px; font-size: 16px; font-weight: 600; margin-top: 12px; }
+  
+  /* Card */
+  .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .card-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .card-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  
+  /* Dimensions */
+  .dimension-item { margin-bottom: 24px; }
+  .dimension-item:last-child { margin-bottom: 0; }
+  .dimension-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .dimension-name { font-size: 14px; font-weight: 500; color: #333; }
+  .dimension-score { font-size: 16px; font-weight: 700; }
+  .dimension-bar { height: 10px; background: #e9ecef; border-radius: 5px; overflow: hidden; margin-bottom: 8px; }
+  .dimension-fill { height: 100%; border-radius: 5px; transition: width 0.8s ease; }
+  .dimension-comment { font-size: 13px; color: #666; line-height: 1.6; }
+  
+  /* Score colors */
+  .score-high { color: #28a745; }
+  .score-medium { color: #ffc107; }
+  .score-low { color: #dc3545; }
+  .fill-high { background: linear-gradient(90deg, #28a745, #20c997); }
+  .fill-medium { background: linear-gradient(90deg, #ffc107, #fd7e14); }
+  .fill-low { background: linear-gradient(90deg, #dc3545, #ff6b6b); }
+  
+  /* Verdict Grid */
+  .verdict-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .verdict-item { background: #f8f9fa; border-radius: 10px; padding: 16px 12px; text-align: center; }
+  .verdict-value { font-size: 24px; font-weight: 700; color: #667eea; }
+  .verdict-label { font-size: 12px; color: #6c757d; margin-top: 4px; }
+  
+  /* Lists */
+  .suggestions-list, .strengths-list, .weaknesses-list { list-style: none; }
+  .suggestions-list li, .strengths-list li, .weaknesses-list li { padding: 12px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; display: flex; align-items: flex-start; gap: 12px; }
+  .suggestions-list li:last-child, .strengths-list li:last-child, .weaknesses-list li:last-child { border-bottom: none; }
+  .bullet { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+  .bullet.suggestion { background: #e7f3ff; color: #007bff; }
+  .bullet.positive { background: #d4edda; color: #155724; }
+  .bullet.negative { background: #f8d7da; color: #721c24; }
+  
+  /* Prediction */
+  .prediction-box { background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border-radius: 12px; padding: 24px; }
+  .prediction-title { font-weight: 600; font-size: 16px; color: #667eea; margin-bottom: 16px; }
+  .prediction-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #e0e0e0; font-size: 14px; }
+  .prediction-item:last-child { border-bottom: none; }
+  .prediction-value { font-weight: 600; color: #333; }
+  
+  /* Footer */
+  .footer { text-align: center; padding: 24px; color: #999; font-size: 12px; }
+  
+  /* Print */
+  @media print {
+    body { background: white; padding: 0; }
+    .card { box-shadow: none; border: 1px solid #eee; margin-bottom: 16px; page-break-inside: avoid; }
+    .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .dimension-fill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  
+  @media (max-width: 600px) {
+    .verdict-grid { grid-template-columns: repeat(2, 1fr); }
+    .score-display { flex-direction: column; text-align: center; }
+    .score-meta { text-align: center; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>📊 内容评估报告</h1>
+    <div class="subtitle">{{ARTICLE_TITLE}} - {{EVALUATION_DATE}}</div>
+    <div class="score-display">
+      <div class="big-score">{{TOTAL_SCORE}}</div>
+      <div class="score-meta">
+        <div class="score-label">综合爆款潜力指数（满分100）</div>
+        <div class="score-grade">{{GRADE}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Six Dimensions -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-icon" style="background: #e7f3ff; color: #007bff;">📐</span>
+      六维评分分析
+    </div>
+    
+    <!-- Hook -->
+    <div class="dimension-item">
+      <div class="dimension-header">
+        <span class="dimension-name">1️⃣ Hook 钩子强度</span>
+        <span class="dimension-score {{HOOK_COLOR}}">{{HOOK_SCORE}}/100</span>
+      </div>
+      <div class="dimension-bar">
+        <div class="dimension-fill {{HOOK_FILL_CLASS}}" style="width: {{HOOK_SCORE}}%;"></div>
+      </div>
+      <div class="dimension-comment">{{HOOK_COMMENT}}</div>
+    </div>
+    
+    <!-- Velocity -->
+    <div class="dimension-item">
+      <div class="dimension-header">
+        <span class="dimension-name">2️⃣ 互动速度 Velocity</span>
+        <span class="dimension-score {{VELOCITY_COLOR}}">{{VELOCITY_SCORE}}/100</span>
+      </div>
+      <div class="dimension-bar">
+        <div class="dimension-fill {{VELOCITY_FILL_CLASS}}" style="width: {{VELOCITY_SCORE}}%;"></div>
+      </div>
+      <div class="dimension-comment">{{VELOCITY_COMMENT}}</div>
+    </div>
+    
+    <!-- Novelty -->
+    <div class="dimension-item">
+      <div class="dimension-header">
+        <span class="dimension-name">3️⃣ 话题新颖度</span>
+        <span class="dimension-score {{NOVELTY_COLOR}}">{{NOVELTY_SCORE}}/100</span>
+      </div>
+      <div class="dimension-bar">
+        <div class="dimension-fill {{NOVELTY_FILL_CLASS}}" style="width: {{NOVELTY_SCORE}}%;"></div>
+      </div>
+      <div class="dimension-comment">{{NOVELTY_COMMENT}}</div>
+    </div>
+    
+    <!-- Audience -->
+    <div class="dimension-item">
+      <div class="dimension-header">
+        <span class="dimension-name">4️⃣ 受众匹配度</span>
+        <span class="dimension-score {{AUDIENCE_COLOR}}">{{AUDIENCE_SCORE}}/100</span>
+      </div>
+      <div class="dimension-bar">
+        <div class="dimension-fill {{AUDIENCE_FILL_CLASS}}" style="width: {{AUDIENCE_SCORE}}%;"></div>
+      </div>
+      <div class="dimension-comment">{{AUDIENCE_COMMENT}}</div>
+    </div>
+    
+    <!-- Value -->
+    <div class="dimension-item">
+      <div class="dimension-header">
+        <span class="dimension-name">5️⃣ 实用价值</span>
+        <span class="dimension-score {{VALUE_COLOR}}">{{VALUE_SCORE}}/100</span>
+      </div>
+      <div class="dimension-bar">
+        <div class="dimension-fill {{VALUE_FILL_CLASS}}" style="width: {{VALUE_SCORE}}%;"></div>
+      </div>
+      <div class="dimension-comment">{{VALUE_COMMENT}}</div>
+    </div>
+    
+    <!-- Share -->
+    <div class="dimension-item">
+      <div class="dimension-header">
+        <span class="dimension-name">6️⃣ 传播诱因</span>
+        <span class="dimension-score {{SHARE_COLOR}}">{{SHARE_SCORE}}/100</span>
+      </div>
+      <div class="dimension-bar">
+        <div class="dimension-fill {{SHARE_FILL_CLASS}}" style="width: {{SHARE_SCORE}}%;"></div>
+      </div>
+      <div class="dimension-comment">{{SHARE_COMMENT}}</div>
+    </div>
+  </div>
+
+  <!-- Verdict -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-icon" style="background: #fff3cd; color: #856404;">🎯</span>
+      爆款判定指标
+    </div>
+    <div class="verdict-grid">
+      <div class="verdict-item">
+        <div class="verdict-value">{{HOOK_SCORE}}%</div>
+        <div class="verdict-label">Hook分</div>
+      </div>
+      <div class="verdict-item">
+        <div class="verdict-value">{{ENGAGEMENT_RATE}}%</div>
+        <div class="verdict-label">预测互动率</div>
+      </div>
+      <div class="verdict-item">
+        <div class="verdict-value">{{TOP1_PROBABILITY}}%</div>
+        <div class="verdict-label">Top 1% 概率</div>
+      </div>
+      <div class="verdict-item">
+        <div class="verdict-value">{{READ_RATE}}%</div>
+        <div class="verdict-label">阅读完成率</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suggestions -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-icon" style="background: #e7f3ff; color: #007bff;">💡</span>
+      改进建议
+    </div>
+    <ul class="suggestions-list">
+      {{SUGGESTIONS}}
+    </ul>
+  </div>
+
+  <!-- Prediction -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-icon" style="background: #d4edda; color: #155724;">📈</span>
+      爆款预测
+    </div>
+    <div class="prediction-box">
+      <div class="prediction-item">
+        <span>爆款等级</span>
+        <span class="prediction-value">{{GRADE}}</span>
+      </div>
+      <div class="prediction-item">
+        <span>综合评分</span>
+        <span class="prediction-value">{{TOTAL_SCORE}}/100</span>
+      </div>
+      <div class="prediction-item">
+        <span>达到 Top 1% 爆款概率</span>
+        <span class="prediction-value">{{TOP1_PROBABILITY}}%</span>
+      </div>
+      <div class="prediction-item">
+        <span>优化后预计可提升至</span>
+        <span class="prediction-value">{{OPTIMIZED_SCORE}}+</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    基于 AI 内容爆款潜力分析框架 | 评分时间：{{EVALUATION_DATE}}
+  </div>
+</div>
+</body>
+</html>
