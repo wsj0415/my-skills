@@ -1,1 +1,31 @@
-[]
+[
+  {
+    "name": "content-evaluator",
+    "description": "|",
+    "category": "",
+    "path": "content-evaluator",
+    "file": "content-evaluator/SKILL.md",
+    "files": [
+      "content-evaluator/SKILL.md",
+      "content-evaluator/_meta.json",
+      "content-evaluator/assets/report-template.html",
+      "content-evaluator/references/sample-input.json",
+      "content-evaluator/references/scoring-guide.md",
+      "content-evaluator/scripts/generate_report.py",
+      "content-evaluator/test-report.html"
+    ]
+  },
+  {
+    "name": "prompt-coach",
+    "description": "基于 8 维度评分标准（Clarity/Specificity/Context/Constraints/Output format/Role/Examples/Chain-of-thought）为 Prompt 打分并给出优化版本",
+    "category": "",
+    "path": "prompt-coach",
+    "file": "prompt-coach/SKILL.md",
+    "files": [
+      "prompt-coach/SKILL.md",
+      "prompt-coach/references/examples.md",
+      "prompt-coach/test_prompts/good.md",
+      "prompt-coach/test_prompts/poor.md"
+    ]
+  }
+]
