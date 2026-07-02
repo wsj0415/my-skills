@@ -27,5 +27,16 @@
       "prompt-coach/test_prompts/good.md",
       "prompt-coach/test_prompts/poor.md"
     ]
+  },
+  {
+    "name": "windows-terminal-claude-code",
+    "description": "Use when the user wants to run Claude Code in a visible Windows Terminal window, send custom prompts interactively, and capture the full terminal result on Windows.",
+    "category": "",
+    "path": "windows-terminal-claude-code",
+    "file": "windows-terminal-claude-code/SKILL.md",
+    "files": [
+      "windows-terminal-claude-code/SKILL.md",
+      "windows-terminal-claude-code/scripts/Invoke-ClaudeTerminal.ps1"
+    ]
   }
 ]
