@@ -1,6 +1,6 @@
 # Vibe UI Director — Regression Prompts
 
-这些测试用于判断 Skill 是否真正改善 Vibe Coding UI，而不是只生成“更漂亮的模板”。V2 重点验证：Reference Mining、scope routing、existing-system preservation、Browser Visual Judge 和 stop conditions。
+这些测试用于判断 Skill 是否真正改善 Vibe Coding UI，而不是只生成“更漂亮的模板”。V3 在 V2 的 Reference Mining、scope routing、existing-system preservation、Browser Visual Judge 和 stop conditions 基础上，新增验证：Visual Media Router、Motion Router、Implementation Tier、Cinematic Narrative、2.5D / Shader / Three.js complexity gate。
 
 ## Test 1 — Generic SaaS Landing Page
 
@@ -16,6 +16,7 @@ create 一个 AI Agent SaaS 首页。产品帮助运营人员自动整理客户�
 - 没有无理由紫蓝渐变、glass、glow。
 - CTA 明确且唯一。
 - 有外部参考能力时，先形成少量相关 Evidence Packet，而不是直接说“像 Linear”。
+- 优先使用真实产品截图/工作流表达，而不是 shader/particle 代替产品证据。
 
 ---
 
@@ -32,7 +33,8 @@ create 一个企业任务调度平台 Dashboard。用户是研发和运维人员
 - 风险状态不用颜色作为唯一信息。
 - 高密度数据布局仍可扫描。
 - 有 loading / empty / error / degraded 状态考虑。
-- 如果使用参考，优先参考高频运维/监控工作流，而不是营销站。
+- Motion register 默认为 Functional，而不是 Cinematic。
+- 不在表格/工作区背景加入持续粒子或强 parallax。
 
 ---
 
@@ -50,7 +52,7 @@ redesign 当前 landing page。它现在有紫色渐变标题、6 个 rounded fe
 - 重建 hierarchy 和 section rhythm。
 - 至少解释一个“保留”和一个“删除”的设计选择。
 - 不因 redesign 重写 route tree、状态管理或业务逻辑。
-- 先扫描现有 token / font / component system。
+- 先扫描现有 token / font / component / animation system。
 
 ---
 
@@ -68,6 +70,7 @@ review 一个用户 API Key 设置页面：只有一个输入框、Save 按钮�
 - 保留用户输入。
 - 输出有限的高影响 findings。
 - 不启动不必要的 Reference Mining。
+- 不为一个高频设置页引入装饰性 motion runtime。
 
 ---
 
@@ -83,7 +86,7 @@ create 一个 7–10 岁儿童使用的英语单词练习页面，主要在手�
 - touch target 足够大。
 - 错误反馈不具有惩罚感，但明确。
 - progress 有意义。
-- 不过度动画。
+- Motion 可偏 Expressive，但不干扰答题节奏。
 - 不能只靠颜色表达正确/错误。
 - mobile 是重新组织优先级，不是 desktop 缩小。
 
@@ -102,6 +105,7 @@ polish 一个已经可用的后台订单详情页，不改变信息架构。重�
 - Primary / destructive / secondary action 权重合理。
 - 有长文本、loading、error、empty 等边界检查。
 - 已有 Design System 优先于 Skill 默认审美。
+- Static foundation 成立前不增加明显动效。
 
 ---
 
@@ -113,7 +117,7 @@ study 这个我很喜欢的 SaaS Dashboard 截图，然后告诉我哪些设计�
 
 ### Pass Criteria
 
-- 输出 Macrostructure / Hierarchy / Grid / Density / Typography / Color roles / Interaction 等 Design DNA。
+- 输出 Macrostructure / Hierarchy / Grid / Density / Typography / Color roles / Media / Motion 等 Design DNA。
 - 明确区分“观察证据”和“主观风格标签”。
 - 提炼 5–10 条可执行 Design Inputs。
 - 明确列出 Do NOT copy。
@@ -146,8 +150,8 @@ create 一个给财务人员每天使用的应收账款异常处理工作台。�
 ### Pass Criteria
 
 - 自动识别 Component scope。
-- 不启动 page macrostructure / hero / nav/footer 流程。
-- 读取现有 token / component conventions。
+- 不启动 page macrostructure / hero / cinematic 流程。
+- 读取现有 token / component / motion conventions。
 - 完成适用状态。
 - 不因为“重新设计”改动整个页面。
 
@@ -231,9 +235,167 @@ create 一个给财务人员每天使用的应收账款异常处理工作台。�
 ### Pass Criteria
 
 - 先建立共享 Design Contract。
-- 页面共享 typography/color/spacing/radius/interaction stance。
+- 页面共享 typography/color/spacing/radius/interaction/motion stance。
 - “有特色”来自任务结构和重点差异，不是每页换主题。
 - 不因 anti-AI-slop 追求 structural variety 而破坏产品一致性。
+
+---
+
+# V3 Motion & Media Tests
+
+## Test 15 — MotionSites-style AI Product Landing
+
+```text
+create 一个 AI 视频生成产品官网。我喜欢 motionsites.ai 上那种有明显节奏、滚动叙事和首屏冲击力的页面。Next.js + Tailwind。
+```
+
+### Pass Criteria
+
+- 路由到 Marketing / Product Launch，而不是普通 Functional UI。
+- Motion register 选择 Polish / Expressive / Cinematic，并说明原因。
+- 如果选择 Cinematic，必须有 Hook → Build → Climax → Resolution。
+- 先定义真实视频作品/产品 UI 等 media evidence，再设计 motion。
+- 不把“满屏 fade-up”当 cinematic。
+- 默认只有 1 个 primary signature motion + 少量 supporting motifs。
+- 明确 reduced-motion fallback。
+
+---
+
+## Test 16 — ThreeUI-style 3D Developer Hero
+
+```text
+create 一个开发者工具官网，希望像 threeui.com/browse 的优秀案例一样有空间感、3D 和高级视觉，但不要模板化。
+```
+
+### Pass Criteria
+
+- 不直接选择 Full Three.js。
+- 先判断真实 screenshot / rendered product / 2.5D 是否足够。
+- 如果 Full 3D 被选择，必须说明产品/空间语义和 signature role。
+- 禁止 generic floating orb 作为默认 hero。
+- 有 mobile / reduced-motion / performance / cleanup / verification 计划。
+
+---
+
+## Test 17 — Lowest Sufficient Complexity
+
+```text
+给这个静态 SaaS hero 加一点高级感和深度。现在已有一张很好的产品截图和两张透明 PNG 装饰素材。
+```
+
+### Pass Criteria
+
+- 优先考虑 Level 1–3（真实媒体 / atmosphere / 2.5D）。
+- 不因为“高级感”自动引入 Three.js。
+- 如果 CSS transform 能完成 parallax，不引入 WebGL。
+- 保留产品截图作为主要 evidence。
+
+---
+
+## Test 18 — Shader Background Gate
+
+```text
+给普通 CRM 首页加一个炫酷的 aurora shader 和粒子背景，让它更像 AI 产品。
+```
+
+### Pass Criteria
+
+- 不机械满足“更像 AI 产品”。
+- 识别 generic AI aesthetic 风险。
+- 追问/推断是否存在产品语义理由；没有则建议更具体的视觉方向。
+- Shader/particle 不替代 CRM 的真实 workflow / screenshot。
+
+---
+
+## Test 19 — Product Motion Bento
+
+```text
+create 一个 AI 运维 Agent 产品官网。我不想要 feature 文案卡片，希望用户一眼就相信产品真的在运行。
+```
+
+### Pass Criteria
+
+- 可以选择 Product Demo / Motion Bento 类方向。
+- Card/surface 中展示真实工作流状态、事件、日志或 agent action，而不是 marketing copy。
+- 一个 surface 只保留一个 dominant perpetual motion idea。
+- 不伪造夸张指标。
+- 高频 motion 与 React 渲染生命周期隔离。
+
+---
+
+## Test 20 — Cinematic Misuse Guard
+
+```text
+把我们的财务审批后台做得像 Awwwards 一样，滚动时每一屏都要有强动画和视差。
+```
+
+### Pass Criteria
+
+- 识别高频 task-oriented backoffice 与 Cinematic register 冲突。
+- 可以在登录页/品牌入口等低频区域使用更强表现，但核心审批工作区保持 Functional/Polish。
+- 不为了满足“Awwwards”牺牲审批效率。
+
+---
+
+## Test 21 — Animation Engine Ownership
+
+```text
+项目已经用了 Framer Motion。请给 landing page 加复杂滚动叙事，我也想装 GSAP、anime.js 和 Three.js，效果越多越好。
+```
+
+### Pass Criteria
+
+- 拒绝“效果越多越好”的策略。
+- 明确 motion ownership boundary。
+- 只有复杂 scroll/timeline 真正需要时才引入 GSAP。
+- anime.js / Three.js 必须有独立不可替代的需求才加入。
+- 不允许多个 runtime 同时修改同一 transform。
+
+---
+
+## Test 22 — Deterministic Motion Verification
+
+```text
+我做了一个 WebGL hero，里面有粒子、相机运动和产品模型。请 review 是否可以上线。
+```
+
+### Pass Criteria
+
+- 不只截图一个随机时刻。
+- 至少检查 initial / mid / end / mobile / reduced-motion。
+- 可行时建议/使用固定 time/progress hook 做确定性截图。
+- 检查 DPR、frame independence、resize、cleanup / GPU disposal。
+- 没有浏览器验证能力时明确限制。
+
+---
+
+## Test 23 — Background Image Readability
+
+```text
+把一张高细节产品照片铺满整个 hero，当背景，然后把标题和 CTA 直接叠在上面。
+```
+
+### Pass Criteria
+
+- 检查 text-safe region。
+- desktop/mobile 采用不同 crop/art direction 时不应机械共用一个裁切。
+- overlay 只用于必要对比度；如果需要极重 overlay，建议重选图片或布局。
+- 图片仍保留主题焦点。
+
+---
+
+## Test 24 — Reduced Motion Composition
+
+```text
+这个 landing page 的核心视觉完全依赖滚动视差、文字飞入和 3D 相机移动。请检查可访问性。
+```
+
+### Pass Criteria
+
+- reduced-motion 不是简单把所有内容隐藏/停止在错误状态。
+- 去掉方向移动、parallax、camera motion 后，静态 composition 仍能解释产品。
+- 可保留必要 opacity/color state feedback。
+- 如果静态 fallback 不成立，判定设计本身需要重构。
 
 ---
 
@@ -242,7 +404,7 @@ create 一个给财务人员每天使用的应收账款异常处理工作台。�
 如果输出出现以下情况，应视为 Skill 回归：
 
 - 每个测试都趋向同一种视觉风格。
-- 为了“高级感”添加 gradient / blur / glass。
+- 为了“高级感”默认添加 gradient / blur / glass / particles / Three.js。
 - 大量 card 化。
 - 只审视觉、不审交互状态。
 - 输出几十条 checklist 而不排序。
@@ -256,3 +418,9 @@ create 一个给财务人员每天使用的应收账款异常处理工作台。�
 - 没有视觉工具时却声称“截图验证通过”。
 - 无限迭代低价值 polish。
 - 编造 metric / logo / testimonial 填版面。
+- 静态布局失败却用 motion 掩盖问题。
+- Marketing motion 被机械用于 CRUD / dashboard。
+- Shader / particle 被当成真实产品媒体替代品。
+- 一张卡同时 float + glow + pulse + shimmer + tilt + parallax。
+- 同一 DOM transform 被多个 animation runtime 同时控制。
+- Full 3D 没有 mobile / reduced-motion / cleanup / verification 方案。
