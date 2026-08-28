@@ -1,0 +1,102 @@
+{
+  "deck": {
+    "title": "Growth Strategy 2027",
+    "subtitle": "Illustrative consulting deck spec",
+    "audience": "Executive Committee",
+    "decision": "Approve the first-wave investment priorities",
+    "aspectRatio": "16:9",
+    "language": "en"
+  },
+  "theme": {
+    "fontHeading": "Aptos Display",
+    "fontBody": "Aptos",
+    "accent": "#175CD3",
+    "background": "#FFFFFF"
+  },
+  "slides": [
+    {
+      "id": "s01",
+      "type": "cover",
+      "title": "Growth Strategy 2027",
+      "subtitle": "Where to place the next wave of investment"
+    },
+    {
+      "id": "s02",
+      "type": "executive-summary",
+      "actionTitle": "We recommend three moves to capture most of the available growth",
+      "recommendation": "Prioritize premium portfolio expansion, direct-channel acceleration, and capability building.",
+      "points": [
+        {"headline": "Portfolio", "detail": "Premium demand is growing materially faster than the base segment."},
+        {"headline": "Channel", "detail": "Direct channels create better economics and richer customer data."},
+        {"headline": "Capability", "detail": "The longest-lead capability must start before the demand inflects."}
+      ],
+      "nextAction": "Approve the first-wave investment envelope.",
+      "source": ["src-market"]
+    },
+    {
+      "id": "s03",
+      "type": "chart-commentary",
+      "actionTitle": "Premium demand will contribute most of the category growth through 2029",
+      "takeaway": "Shift portfolio investment toward premium offers.",
+      "evidence": [
+        {
+          "kind": "chart",
+          "chartType": "bar",
+          "categories": ["Base", "Premium", "Ultra-premium"],
+          "series": [
+            {"name": "CAGR", "values": [4, 18, 22]}
+          ],
+          "unit": "%",
+          "period": "2026-2029"
+        }
+      ],
+      "commentary": [
+        "Premium segments grow 4–5x faster than the base segment.",
+        "The portfolio is currently underweighted to the fastest-growing pools."
+      ],
+      "source": ["src-market"]
+    },
+    {
+      "id": "s04",
+      "type": "matrix-2x2",
+      "actionTitle": "Two initiatives combine high impact with near-term feasibility",
+      "xAxis": {"label": "Feasibility", "min": "Low", "max": "High"},
+      "yAxis": {"label": "Impact", "min": "Low", "max": "High"},
+      "items": [
+        {"label": "Premium launch", "x": 0.82, "y": 0.91, "highlight": true},
+        {"label": "Direct channel", "x": 0.76, "y": 0.83, "highlight": true},
+        {"label": "New geography", "x": 0.38, "y": 0.77},
+        {"label": "Cost program", "x": 0.70, "y": 0.48}
+      ],
+      "source": ["src-internal"]
+    },
+    {
+      "id": "s05",
+      "type": "recommendation",
+      "actionTitle": "Start the longest-lead capability now while piloting the two commercial moves",
+      "recommendation": "Run the portfolio and channel pilots in parallel with capability build-out.",
+      "actions": [
+        {"label": "Launch premium pilot", "owner": "GM", "timing": "Q4 2026"},
+        {"label": "Expand direct-channel test", "owner": "Commercial", "timing": "Q4 2026"},
+        {"label": "Begin capability build", "owner": "COO", "timing": "Immediately"}
+      ],
+      "source": ["src-internal"]
+    }
+  ],
+  "sources": [
+    {
+      "id": "src-market",
+      "title": "Illustrative market study",
+      "publisher": "Strategy Team",
+      "date": "2026-07-31",
+      "locator": "pp. 12-18"
+    },
+    {
+      "id": "src-internal",
+      "title": "Internal initiative assessment",
+      "publisher": "Strategy Team",
+      "date": "2026-08-15",
+      "locator": "working analysis"
+    }
+  ]
+}
