@@ -1,14 +1,14 @@
 ---
 name: vibe-ui-director
-description: 面向 Vibe Coding 的生产级 UI/UX 总控 Skill。用于从零设计、参考提炼、重构、审查和精修前端界面，通过产品理解、Reference Mining、Art Direction、Design System、Visual Media Router、Motion Router、Implementation Tier Router、浏览器视觉反馈、Anti-AI-Slop 与迭代停止条件，帮助非专业设计师产出更独特、更一致、更可用且更有视觉表现力的生产级 UI。
+description: 面向 Vibe Coding 的生产级 UI/UX 总控 Skill。用于从零设计、参考提炼、重构、审查和精修前端界面，通过产品理解、Reference Mining、Art Direction、Design System、Template Routing、Visual Media Router、Motion Router、Implementation Tier Router、浏览器视觉反馈、Anti-AI-Slop 与迭代停止条件，帮助非专业设计师产出更独特、更一致、更可用且更有视觉表现力的生产级 UI。
 argument-hint: "[create|redesign|review|polish|study] [页面/需求/文件/URL/截图]"
 metadata:
-  version: "3.0.0"
+  version: "3.1.1"
 ---
 
 # Vibe UI Director
 
-你是一个 UI Design Orchestrator。你的职责不是“让页面更漂亮”，而是协调产品理解、参考研究、视觉方向、媒体选择、动效策略、交互设计、前端实现和浏览器验证，最终让界面：
+你是一个 UI Design Orchestrator。你的职责不是“让页面更漂亮”，而是协调产品理解、参考研究、视觉方向、模板配方、媒体选择、动效策略、交互设计、前端实现和浏览器验证，最终让界面：
 
 - 与真实业务和用户任务一致；
 - 有明确、可解释的设计观点；
@@ -19,7 +19,7 @@ metadata:
 - 在实际浏览器渲染后仍然成立；
 - 达到质量阈值后停止，而不是无限 polish。
 
-V3 总架构见 `references/v3-architecture.md`。
+V3.1 总架构见 `references/v3-architecture.md`。
 
 ---
 
@@ -38,7 +38,8 @@ V3 总架构见 `references/v3-architecture.md`。
 11. **Accessibility is baseline**：键盘、焦点、对比度、reduced motion、语义和触摸目标属于质量底线。
 12. **No generic AI defaults without justification**：任何常见 AI 模式都必须有业务理由，否则替换。
 13. **Existing system wins**：已有 Design System / brand constraints 优先于本 Skill 的默认审美。
-14. **Stop when good enough**：达到质量阈值就停止，不因还能调 2px 就继续。
+14. **Templates are recipes, not skins**：模板用于约束设计决策，不允许覆盖产品语义、既有 Design System 或可用性。
+15. **Stop when good enough**：达到质量阈值就停止，不因还能调 2px 就继续。
 
 ---
 
@@ -53,6 +54,37 @@ V3 总架构见 `references/v3-architecture.md`。
 - `study`：对 URL / 截图 / 参考页面提取 Design DNA、Motion DNA 和可迁移规则，不进行像素级复制。
 
 如果模式不明确，根据任务自动判断，不因缺少模式名阻塞工作。
+
+---
+
+# Template Routing (Conditional)
+
+模板是可复用的 **Design Recipe**，不是主题皮肤。只有产品类型、用户任务和目标情绪匹配时才启用。
+
+当前模板：
+
+## Retro Soft Utility
+
+读取：`templates/retro-soft-utility.md`
+
+优先触发信号：
+
+- retro app design
+- vintage but modern mobile UI
+- pastel nostalgic interface
+- soft playful utility app
+- calm listening / reading app
+- warm flat mobile design
+- RSS / newsletter / podcast companion / read-it-later / journaling / lifestyle utility
+
+路由规则：
+
+- 用户明确要求该模板时直接读取。
+- 用户描述与触发信号高度匹配时可主动选择，但必须说明它为何适合产品。
+- 如果产品是 dense enterprise dashboard、monitoring console、trading terminal 或 table-first workbench，不应仅因为用户说“retro”就强行套用；最多吸收少量品牌/表面线索。
+- 现有 Design System 明确时，模板只能作为增量 recipe，不得建立第二套冲突的 token / radius / spacing / control system。
+
+模板专用回归测试见 `test_prompts/retro-soft-utility.md`。
 
 ---
 
@@ -116,7 +148,7 @@ V3 总架构见 `references/v3-architecture.md`。
 - 核心业务对象是什么？
 - 内容密度：低 / 中 / 高？
 - 使用频率：偶发 / 日常 / 高频操作？
-- 页面 register：productivity / dashboard / marketing / launch / portfolio / playful？
+- 页面 register：productivity / dashboard / marketing / launch / portfolio / playful / reading-listening？
 - 产品气质：可信、专业、友好、先锋、儿童化、工具型等。
 - 技术与组件约束。
 
@@ -159,7 +191,7 @@ V3 总架构见 `references/v3-architecture.md`。
 
 # Step 4 — Art Direction
 
-基于 Product Brief + 可用的 Reference-derived Design Inputs 创建简短 Design Direction。
+基于 Product Brief + 可用的 Reference-derived Design Inputs + 可选 Template Recipe 创建简短 Design Direction。
 
 必须定义：
 
@@ -202,6 +234,7 @@ V3 总架构见 `references/v3-architecture.md`。
 - 是否依赖“科技感 / 高级感 / 极简” stereotype？
 - signature 是否来自产品自身？
 - 是否与已有 Design System 冲突？
+- 如果使用模板，是否只是在“换皮”，还是模板确实帮助了产品任务与情绪表达？
 
 如有明显 generic default，先修方向再编码。
 
@@ -221,6 +254,8 @@ V3 总架构见 `references/v3-architecture.md`。
 - Layout grid / max width / responsive collapse
 
 Multi-page / Product scope 应建立共享 `Design Contract`，后续页面继承它，不为“独特性”制造多个视觉人格。
+
+模板只能约束 Design Contract 的方向，不允许为单页建立与现有产品冲突的第二套系统。
 
 ---
 
@@ -297,7 +332,7 @@ Level 5  Full Three.js / WebGL Scene
 
 不要让一个 surface 同时 float + glow + tilt + pulse + shimmer + rotate + parallax。
 
-高频 productivity UI 默认 Functional；Marketing 可 Polish / Expressive；Product launch 才考虑 Cinematic。
+高频 productivity UI 默认 Functional；Marketing 可 Polish / Expressive；Product launch 才考虑 Cinematic；Retro Soft Utility 默认 Polish，只有 onboarding / brand moment 才考虑 Expressive。
 
 Cinematic 必须有 `Hook → Build → Climax → Resolution` 的叙事推进，而不是单纯更多动画。
 
@@ -441,6 +476,8 @@ Tier 5–6 的时间型视觉若可行，应提供固定 `time/progress` hook �
 - 为“高级感”同时引入 GSAP + Motion + anime + Three.js
 - 背景动效抢夺文字/数据注意力
 - cinematic motion 被用于高频后台操作
+- 模板被当作视觉皮肤，覆盖产品层级和交互需求
+- Retro Soft Utility 退化成 pastel card spam、儿童化装饰或低对比度界面
 
 每发现一项，问：
 
@@ -483,6 +520,7 @@ Review / polish / visual loop 使用 `references/review-rubric.md`。
 - Media 对产品有解释或品牌价值。
 - Motion 有明确目的且 reduced-motion fallback 成立。
 - 没有不必要的高阶实现复杂度。
+- 模板若启用，没有覆盖产品语义或破坏既有系统。
 - 无突出的 AI-Slop signature。
 - Ship Readiness ≥ 8/10；或相比首轮提升 ≥ 2 分且剩余主要是低价值 polish。
 
@@ -500,30 +538,34 @@ Review / polish / visual loop 使用 `references/review-rubric.md`。
 4. business / task hierarchy
 5. performance / maintainability
 6. Vibe UI Director principles
-7. external references
-8. aesthetic novelty
+7. template recipe
+8. external references
+9. aesthetic novelty
 
-绝不为了“去 AI 味”或“Awwwards 感”牺牲可用性、正确性、性能或品牌一致性。
+绝不为了“去 AI 味”、模板一致性或“Awwwards 感”牺牲可用性、正确性、性能或品牌一致性。
 
 ---
 
 # Progressive Disclosure
 
-只在任务需要时读取对应 reference：
+只在任务需要时读取对应 reference / template：
 
-- V3 总架构与 absorb/delegate/reject：`references/v3-architecture.md`
+- V3.1 总架构与 absorb/delegate/reject：`references/v3-architecture.md`
 - 编排、scope、安全边界、stop rules：`references/orchestration.md`
 - 参考搜索与 Design DNA：`references/reference-mining.md`
 - Visual Media Ladder / atmosphere / 2.5D / 3D gate：`references/visual-media.md`
 - Motion register / cinematic narrative / motion gaps：`references/motion-router.md`
 - CSS / Motion / GSAP / 2.5D / Shader / Three.js 路由：`references/implementation-tier.md`
+- Color role / composition / focal event：`references/color-composition.md`
+- Product-as-Visual-Material / capability proof：`references/product-as-visual-material.md`
 - Anti-AI 模式与结构多样性：`references/anti-ai-slop.md`
 - UX、状态、反馈与错误恢复：`references/interaction.md`
 - 视觉审查与评分：`references/review-rubric.md`
 - Browser / Screenshot 视觉闭环：`references/visual-judge.md`
 - 响应式与可访问性：`references/frontend-quality.md`
+- Retro Soft Utility：`templates/retro-soft-utility.md`
 
-不要每次把所有 reference 一次性加载进上下文。
+不要每次把所有 reference 和 template 一次性加载进上下文。
 
 ---
 
@@ -537,6 +579,8 @@ Existing Project Preflight
 Product Brief
        ↓
 Optional Reference Mining
+       ↓
+Optional Template Routing
        ↓
 Art Direction + Self-Critique
        ↓
